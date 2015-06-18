@@ -88,5 +88,6 @@ class ExtensionPassTest extends AbstractCompilerPassTestCase
     protected function registerCompilerPass(ContainerBuilder $container)
     {
         $container->addCompilerPass(new ExtensionPass());
+        $container->setDefinition('twig.loader.filesystem', new Definition('stdClass'));
     }
 }

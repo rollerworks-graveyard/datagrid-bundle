@@ -2,6 +2,7 @@
 
 namespace Rollerworks\Component\DatagridBundle\DependencyInjection\Compiler;
 
+use Rollerworks\Component\Datagrid\Twig\Extension\DatagridExtension as TwigDatagridExtension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -26,9 +27,18 @@ class ExtensionPass implements CompilerPassInterface
 
         $definition = $container->getDefinition('rollerworks_datagrid.extension');
 
+        $this->processTwig($container);
         $this->processExtensions($container);
         $this->processTypes($definition, $container);
         $this->processTypeExtensions($definition, $container);
+    }
+
+    private function processTwig(ContainerBuilder $container)
+    {
+        $container->getDefinition('twig.loader.filesystem')->addMethodCall(
+            'addPath',
+            [dirname((new \ReflectionClass(TwigDatagridExtension::class))->getFileName().'/../').'/Resources/views/theme']
+        );
     }
 
     private function processExtensions(ContainerBuilder $container)
