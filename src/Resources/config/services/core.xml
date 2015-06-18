@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- ResolvedColumnTypeFactory -->
+        <service id="rollerworks_datagrid.resolved_column_type_factory" class="Rollerworks\Component\Datagrid\Column\ResolvedColumnTypeFactory" />
+
+        <!-- ColumnTypeRegistry -->
+        <service id="rollerworks_datagrid.column_type_registry" class="Rollerworks\Component\Datagrid\Column\ColumnTypeRegistry">
+            <argument type="collection">
+                <!--
+                We don't need to be able to add more extensions.
+                * more types can be registered with the rollerworks_datagrid.column_type tag
+                * more type extensions can be registered with the rollerworks_datagrid.column_extension tag
+                * other extensions can be registered with the rollerworks_datagrid.extension tag
+                -->
+                <argument type="service" id="rollerworks_datagrid.extension" />
+            </argument>
+            <argument type="service" id="rollerworks_datagrid.resolved_column_type_factory" />
+        </service>
+
+        <!-- DatagridFactory -->
+        <service id="rollerworks_datagrid.factory" class="Rollerworks\Component\Datagrid\DatagridFactory">
+            <argument type="service" id="rollerworks_datagrid.column_type_registry" />
+            <argument type="service" id="rollerworks_datagrid.resolved_column_type_factory" />
+
+            <!-- FIXME this needs to be configurable -->
+            <argument type="service" id="rollerworks_datagrid.data_mapper.property_accessor" />
+        </service>
+
+        <service id="rollerworks_datagrid.data_mapper.property_accessor" class="Rollerworks\Component\Datagrid\DataMapper\PropertyAccessorMapper" public="false" />
+
+        <!-- DependencyInjectionExtension -->
+        <service id="rollerworks_datagrid.extension" class="Rollerworks\Component\DatagridBundle\Extension\SymfonyDependencyInjectionExtension" public="false">
+            <argument type="service" id="service_container" />
+            <!-- All services with tag "rollerworks_datagrid.column_type" are inserted here by ExtensionPass -->
+            <argument type="collection" />
+            <!-- All services with tag "rollerworks_datagrid.column_extension" are inserted here by ExtensionPass -->
+            <argument type="collection" />
+        </service>
+    </services>
+</container>

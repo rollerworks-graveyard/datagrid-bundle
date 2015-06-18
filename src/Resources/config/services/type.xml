@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- CoreExtension -->
+        <service id="rollerworks_datagrid.column_type.field" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\ColumnType">
+            <tag name="rollerworks_datagrid.column_type" alias="column" />
+        </service>
+        <service id="rollerworks_datagrid.column_type.datetime" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\DateTimeType">
+            <tag name="rollerworks_datagrid.column_type" alias="datetime" />
+        </service>
+
+        <service id="rollerworks_datagrid.column_type.money" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\MoneyType">
+            <tag name="rollerworks_datagrid.column_type" alias="money" />
+            <argument type="service" id="rollerworks_datagrid.value_comparison.money" />
+        </service>
+
+        <service id="rollerworks_datagrid.column_type.number" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\NumberType">
+            <tag name="rollerworks_datagrid.column_type" alias="number" />
+            <argument type="service" id="rollerworks_datagrid.value_comparison.number" />
+        </service>
+
+        <service id="rollerworks_datagrid.column_type.text" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\TextType">
+            <tag name="rollerworks_datagrid.column_type" alias="text" />
+        </service>
+
+        <service id="rollerworks_datagrid.column_type.boolean" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\BooleanType">
+            <tag name="rollerworks_datagrid.column_type" alias="boolean" />
+        </service>
+
+        <service id="rollerworks_datagrid.column_type.action" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\ActionType">
+            <tag name="rollerworks_datagrid.column_type" alias="action" />
+        </service>
+
+        <service id="rollerworks_datagrid.column_type.batch" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\BatchType">
+            <tag name="rollerworks_datagrid.column_type" alias="batch" />
+        </service>
+
+        <service id="rollerworks_datagrid.column_type.model" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\ModelType">
+            <tag name="rollerworks_datagrid.column_type" alias="model" />
+        </service>
+
+        <service id="rollerworks_datagrid.column_type.compound_column" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\CompoundColumnType">
+            <tag name="rollerworks_datagrid.column_type" alias="compound_column" />
+        </service>
+
+        <!-- ColumnOrderExtension -->
+        <!-- TODO services -->
+    </services>
+</container>

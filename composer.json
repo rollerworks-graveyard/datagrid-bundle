@@ -1,0 +1,48 @@
+{
+    "name": "rollerworks/datagrid-bundle",
+    "description": "Symfony integration bundle for the RollerworksDatagrid component",
+    "keywords": ["rollerworks", "datagrid", "bundle"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastiaan Stok",
+            "email": "s.stok@rollercapes.net"
+        },
+        {
+            "name": "Community contributions",
+            "homepage": "https://github.com/Rollerworks/rollerworks-datagrid-bundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "rollerworks/datagrid": "~0.4",
+        "rollerworks/datagrid-twig": "~0.2",
+        "symfony/framework-bundle": "~2.3",
+        "symfony/twig-bundle": "~2.3"
+    },
+    "require-dev": {
+        "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
+        "matthiasnoback/symfony-service-definition-validator": "^1.2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rollerworks\\Component\\DatagridBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rollerworks\\Component\\DatagridBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
