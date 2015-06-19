@@ -35,9 +35,12 @@ class ExtensionPass implements CompilerPassInterface
 
     private function processTwig(ContainerBuilder $container)
     {
+        $reflection = new \ReflectionClass(TwigDatagridExtension::class);
+        $extensionFolder = dirname(dirname(dirname($reflection->getFileName())));
+
         $container->getDefinition('twig.loader.filesystem')->addMethodCall(
             'addPath',
-            [dirname((new \ReflectionClass(TwigDatagridExtension::class))->getFileName().'/../').'/Resources/views/theme']
+            [$extensionFolder.'/Resources/theme']
         );
     }
 

@@ -28,12 +28,13 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root($this->configName);
 
         $rootNode
+            ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('twig')
-                    ->addDefaultChildrenIfNoneSet()
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('themes')
-                            ->prototype('scalar')
+                            ->prototype('scalar')->end()
                             ->defaultValue(['datagrid.html.twig'])
                         ->end()
                     ->end()

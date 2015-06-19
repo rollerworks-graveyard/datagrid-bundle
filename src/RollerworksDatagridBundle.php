@@ -2,8 +2,8 @@
 
 namespace Rollerworks\Component\DatagridBundle;
 
+use Rollerworks\Component\DatagridBundle\DependencyInjection\Compiler\ExtensionPass;
 use Rollerworks\Component\DatagridBundle\DependencyInjection\DatagridExtension;
-use Symfony\Bundle\TwigBundle\DependencyInjection\Compiler\ExtensionPass;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
