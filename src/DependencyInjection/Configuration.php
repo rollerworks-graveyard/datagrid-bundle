@@ -30,9 +30,9 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('twig')
-                    ->addDefaultChildrenIfNoneSet()
                     ->children()
                         ->arrayNode('themes')
+                            ->addDefaultChildrenIfNoneSet()
                             ->prototype('scalar')
                             ->defaultValue(['datagrid.html.twig'])
                         ->end()

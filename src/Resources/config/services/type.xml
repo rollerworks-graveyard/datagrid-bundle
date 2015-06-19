@@ -15,12 +15,10 @@
 
         <service id="rollerworks_datagrid.column_type.money" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\MoneyType">
             <tag name="rollerworks_datagrid.column_type" alias="money" />
-            <argument type="service" id="rollerworks_datagrid.value_comparison.money" />
         </service>
 
         <service id="rollerworks_datagrid.column_type.number" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\NumberType">
             <tag name="rollerworks_datagrid.column_type" alias="number" />
-            <argument type="service" id="rollerworks_datagrid.value_comparison.number" />
         </service>
 
         <service id="rollerworks_datagrid.column_type.text" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\TextType">
