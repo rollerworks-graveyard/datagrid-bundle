@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the RollerworksDatagrid package.
+ *
+ * (c) Sebastiaan Stok <s.stok@rollerscapes.net>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Rollerworks\Component\DatagridBundle\Tests\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
@@ -13,12 +22,12 @@ class ExtensionPassTest extends AbstractCompilerPassTestCase
     public function testRegisteringOfColumnTypes()
     {
         $collectingService = new Definition();
-        $collectingService->setArguments(array(null, array(), array()));
+        $collectingService->setArguments([null, [], []]);
 
         $this->setDefinition('rollerworks_datagrid.extension', $collectingService);
 
         $collectedService = new Definition();
-        $collectedService->addTag('rollerworks_datagrid.column_type', array('alias' => 'user_id'));
+        $collectedService->addTag('rollerworks_datagrid.column_type', ['alias' => 'user_id']);
         $this->setDefinition('acme_user.datagrid.column_type.user_id', $collectedService);
 
         $this->compile();
@@ -26,19 +35,19 @@ class ExtensionPassTest extends AbstractCompilerPassTestCase
         $collectingService = $this->container->findDefinition('rollerworks_datagrid.extension');
 
         $this->assertNull($collectingService->getArgument(0));
-        $this->assertEquals(array('user_id' => 'acme_user.datagrid.column_type.user_id'), $collectingService->getArgument(1));
+        $this->assertEquals(['user_id' => 'acme_user.datagrid.column_type.user_id'], $collectingService->getArgument(1));
         $this->assertCount(0, $collectingService->getArgument(2));
     }
 
     public function testRegisteringOfColumnTypesExtensions()
     {
         $collectingService = new Definition();
-        $collectingService->setArguments(array(null, array(), array()));
+        $collectingService->setArguments([null, [], []]);
 
         $this->setDefinition('rollerworks_datagrid.extension', $collectingService);
 
         $collectedService = new Definition();
-        $collectedService->addTag('rollerworks_datagrid.column_extension', array('alias' => 'field'));
+        $collectedService->addTag('rollerworks_datagrid.column_extension', ['alias' => 'field']);
         $this->setDefinition('acme_user.datagrid.column_extension.field', $collectedService);
 
         $this->compile();
@@ -48,7 +57,7 @@ class ExtensionPassTest extends AbstractCompilerPassTestCase
         $this->assertNull($collectingService->getArgument(0));
         $this->assertCount(0, $collectingService->getArgument(1));
         $this->assertEquals(
-             array('field' => array('acme_user.datagrid.column_extension.field')),
+             ['field' => ['acme_user.datagrid.column_extension.field']],
              $collectingService->getArgument(2)
         );
     }
@@ -56,14 +65,14 @@ class ExtensionPassTest extends AbstractCompilerPassTestCase
     public function testRegisteringOfDatagridExtensions()
     {
         $extensionDefinition = new Definition();
-        $extensionDefinition->setArguments(array(null, array(), array()));
+        $extensionDefinition->setArguments([null, [], []]);
         $this->setDefinition('rollerworks_datagrid.extension', $extensionDefinition);
 
         $collectingService = new Definition();
         $collectingService->setArguments(
-            array(
-                array(new Reference('rollerworks_datagrid.extension')),
-            )
+            [
+                [new Reference('rollerworks_datagrid.extension')],
+            ]
         );
 
         $this->setDefinition('rollerworks_datagrid.registry', $collectingService);
@@ -78,10 +87,10 @@ class ExtensionPassTest extends AbstractCompilerPassTestCase
 
         $this->assertEquals(
             $collectingService->getArgument(0),
-            array(
+            [
                 new Reference('rollerworks_datagrid.extension'),
                 new Reference('rollerworks_datagrid.extension.doctrine_orm'),
-            )
+            ]
         );
     }
 

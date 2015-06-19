@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the RollerworksDatagrid package.
+ *
+ * (c) Sebastiaan Stok <s.stok@rollerscapes.net>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Rollerworks\Component\DatagridBundle\DependencyInjection\Compiler;
 
 use Rollerworks\Component\Datagrid\Twig\Extension\DatagridExtension as TwigDatagridExtension;
@@ -62,7 +71,7 @@ class ExtensionPass implements CompilerPassInterface
 
     private function processTypes(Definition $definition, ContainerBuilder $container)
     {
-        $types = array();
+        $types = [];
 
         foreach ($container->findTaggedServiceIds('rollerworks_datagrid.column_type') as $serviceId => $tag) {
             $alias = isset($tag[0]['alias']) ? $tag[0]['alias'] : $serviceId;
@@ -75,7 +84,7 @@ class ExtensionPass implements CompilerPassInterface
 
     private function processTypeExtensions(Definition $definition, ContainerBuilder $container)
     {
-        $typeExtensions = array();
+        $typeExtensions = [];
 
         foreach ($container->findTaggedServiceIds('rollerworks_datagrid.column_extension') as $serviceId => $tag) {
             $alias = isset($tag[0]['alias']) ? $tag[0]['alias'] : $serviceId;
