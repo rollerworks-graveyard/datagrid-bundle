@@ -34,7 +34,7 @@
         <service id="rollerworks_datagrid.data_mapper.property_accessor" class="Rollerworks\Component\Datagrid\DataMapper\PropertyAccessorMapper" public="false" />
 
         <!-- DependencyInjectionExtension -->
-        <service id="rollerworks_datagrid.extension" class="Rollerworks\Component\DatagridBundle\Extension\SymfonyDependencyInjectionExtension" public="false">
+        <service id="rollerworks_datagrid.extension" class="Rollerworks\Component\DatagridBundle\Extension\Symfony\DependencyInjectionExtension" public="false">
             <argument type="service" id="service_container" />
             <!-- All services with tag "rollerworks_datagrid.column_type" are inserted here by ExtensionPass -->
             <argument type="collection" />
