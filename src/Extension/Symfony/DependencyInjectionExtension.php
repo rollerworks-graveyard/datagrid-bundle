@@ -33,27 +33,42 @@ final class DependencyInjectionExtension implements DatagridExtensionInterface
     private $columnExtensions = [];
 
     /**
+     * @var string[]
+     */
+    private $gridSubscriberServiceIds = [];
+
+    /**
      * Constructor.
      *
-     * @param ContainerInterface $container        Symfony services container object
-     * @param string[]           $columnTypes      column-type service-ids (type => service-id )
-     * @param array[]            $columnExtensions column-type extension service-ids (type => [[service-ids])
+     * @param ContainerInterface $container                Symfony services container object
+     * @param string[]           $columnTypes              column-type service-ids (type => service-id )
+     * @param array[]            $columnExtensions         column-type extension service-ids (type => [[service-ids])
+     * @param array              $gridSubscriberServiceIds Datagrid subscriber service-ids ([service-id, service-id2])
      */
-    public function __construct(ContainerInterface $container, array $columnTypes, array $columnExtensions)
-    {
+    public function __construct(
+        ContainerInterface $container,
+        array $columnTypes,
+        array $columnExtensions,
+        array $gridSubscriberServiceIds = []
+    ) {
         $this->container = $container;
         $this->columnTypes = $columnTypes;
         $this->columnExtensions = $columnExtensions;
+        $this->gridSubscriberServiceIds = $gridSubscriberServiceIds;
     }
 
     /**
-     * Register event listeners.
-     *
-     * @param DatagridInterface $datagrid
+     * {@inheritdoc}
      */
     public function registerListeners(DatagridInterface $datagrid)
     {
-        // TODO: Implement registerListeners() method.
+        $subscribers = [];
+
+        foreach ($this->gridSubscriberServiceIds as $alias => $subscriberName) {
+            $subscribers[] = $this->container->get($this->gridSubscriberServiceIds[$alias]);
+        }
+
+        return $subscribers;
     }
 
     /**
