@@ -47,5 +47,24 @@
 
         <!-- ColumnOrderExtension -->
         <!-- TODO services -->
+
+        <!-- ActionTypeExtension -->
+        <service id="rollerworks_datagrid.column_extension.action" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\ColumnTypeExtension\ActionTypeExtension">
+            <tag name="rollerworks_datagrid.column_extension" alias="action" />
+            <argument type="service" id="router" />
+            <!-- RequestUriProvider is set by RequestUriProviderPass -->
+        </service>
+
+        <!-- Symfony >=2.4 -->
+        <service id="rollerworks_datagrid.request_uri_provider.request_stack" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\RequestUriProviderByRequestStack" public="false">
+            <argument type="service" id="request_stack" />
+        </service>
+
+        <!-- Symfony 2.3 -->
+        <service id="rollerworks_datagrid.request_uri_provider.request_service" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\RequestUriProviderByListener" public="false" />
+        <service id="rollerworks_datagrid.event_subscriber.request" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\EventSubscriber\RequestSubscriber">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="rollerworks_datagrid.request_uri_provider.request_service" />
+        </service>
     </services>
 </container>
