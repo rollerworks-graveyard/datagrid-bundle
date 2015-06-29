@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Component\DatagridBundle\Tests\DependencyInjection;
+namespace Rollerworks\Bundle\DatagridBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
-use Rollerworks\Component\DatagridBundle\DependencyInjection\DatagridExtension;
+use Rollerworks\Bundle\DatagridBundle\DependencyInjection\DatagridExtension;
 use Symfony\Component\DependencyInjection\Definition;
 
 final class DatagridExtensionTest extends AbstractExtensionTestCase

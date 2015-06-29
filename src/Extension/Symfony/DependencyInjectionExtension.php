@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Component\DatagridBundle\Extension\Symfony;
+namespace Rollerworks\Bundle\DatagridBundle\Extension\Symfony;
 
 use Rollerworks\Component\Datagrid\DatagridExtensionInterface;
 use Rollerworks\Component\Datagrid\DatagridInterface;

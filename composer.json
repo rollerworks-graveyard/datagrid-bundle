@@ -27,12 +27,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Rollerworks\\Component\\DatagridBundle\\": "src/"
+            "Rollerworks\\Bundle\\DatagridBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Rollerworks\\Component\\DatagridBundle\\Tests\\": "tests/"
+            "Rollerworks\\Bundle\\DatagridBundle\\Tests\\": "tests/"
         }
     },
     "config": {

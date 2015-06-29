@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Component\DatagridBundle\DependencyInjection\Compiler;
+namespace Rollerworks\Bundle\DatagridBundle\DependencyInjection\Compiler;
 
 use Rollerworks\Component\Datagrid\Twig\Extension\DatagridExtension as TwigDatagridExtension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;

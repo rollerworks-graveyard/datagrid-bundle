@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Component\DatagridBundle\Tests\DependencyInjection;
+namespace Rollerworks\Bundle\DatagridBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyConfigTest\PhpUnit\AbstractConfigurationTestCase;
-use Rollerworks\Component\DatagridBundle\DependencyInjection\Configuration;
+use Rollerworks\Bundle\DatagridBundle\DependencyInjection\Configuration;
 
 class ConfigurationTest extends AbstractConfigurationTestCase
 {

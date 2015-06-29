@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Component\DatagridBundle\Tests\DependencyInjection\Compiler;
+namespace Rollerworks\Bundle\DatagridBundle\Tests\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
-use Rollerworks\Component\DatagridBundle\DependencyInjection\Compiler\ExtensionPass;
+use Rollerworks\Bundle\DatagridBundle\DependencyInjection\Compiler\ExtensionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;

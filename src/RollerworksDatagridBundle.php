@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Component\DatagridBundle;
+namespace Rollerworks\Bundle\DatagridBundle;
 
-use Rollerworks\Component\DatagridBundle\DependencyInjection\Compiler\ExtensionPass;
-use Rollerworks\Component\DatagridBundle\DependencyInjection\DatagridExtension;
+use Rollerworks\Bundle\DatagridBundle\DependencyInjection\Compiler\ExtensionPass;
+use Rollerworks\Bundle\DatagridBundle\DependencyInjection\DatagridExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
