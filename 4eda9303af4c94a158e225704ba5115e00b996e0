@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------
+
+by sstok at 2015-06-29 10:06
+
+No off course, the RequestStack was introduced AFTER Symfony 2.3! :skull:
+Now I need to introduce another BC layer :tada:
