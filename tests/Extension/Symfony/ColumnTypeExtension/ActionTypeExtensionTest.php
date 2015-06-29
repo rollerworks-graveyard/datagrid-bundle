@@ -11,12 +11,10 @@
 
 namespace Rollerworks\Bundle\DatagridBundle\Tests\Extension\Symfony\ColumnTypeExtension;
 
+use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\ColumnTypeExtension\ActionTypeExtension;
 use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\RequestUriProviderInterface;
 use Rollerworks\Component\Datagrid\PreloadedExtension;
 use Rollerworks\Component\Datagrid\Test\ColumnTypeTestCase;
-use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\ColumnTypeExtension\ActionTypeExtension;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ActionTypeExtensionTest extends ColumnTypeTestCase
@@ -68,10 +66,10 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
                 [],
                 [
                     'action' => [
-                        new ActionTypeExtension($urlGenerator->reveal(), $requestUriProvider->reveal())
-                    ]
+                        new ActionTypeExtension($urlGenerator->reveal(), $requestUriProvider->reveal()),
+                    ],
                 ]
-            )
+            ),
         ];
     }
 
