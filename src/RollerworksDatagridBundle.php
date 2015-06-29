@@ -11,9 +11,8 @@
 
 namespace Rollerworks\Bundle\DatagridBundle;
 
-use Rollerworks\Bundle\DatagridBundle\DependencyInjection\Compiler\ExtensionPass;
+use Rollerworks\Bundle\DatagridBundle\DependencyInjection\Compiler as CompilerPass;
 use Rollerworks\Bundle\DatagridBundle\DependencyInjection\DatagridExtension;
-use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -21,7 +20,8 @@ final class RollerworksDatagridBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new ExtensionPass());
+        $container->addCompilerPass(new CompilerPass\ExtensionPass());
+        $container->addCompilerPass(new CompilerPass\RequestUriProviderPass());
     }
 
     public function getContainerExtension()
@@ -33,10 +33,5 @@ final class RollerworksDatagridBundle extends Bundle
         if ($this->extension) {
             return $this->extension;
         }
-    }
-
-    public function registerCommands(Application $application)
-    {
-        // noop
     }
 }
