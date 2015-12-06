@@ -11,6 +11,7 @@
 
 namespace Rollerworks\Bundle\DatagridBundle\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -33,15 +34,10 @@ class RequestUriProviderPass implements CompilerPassInterface
 
         // Symfony >=2.4
         if ($container->hasDefinition('request_stack') || $container->hasAlias('request_stack')) {
-            $definition->addArgument(new Reference('rollerworks_datagrid.request_uri_provider.request_stack'));
-
-            $container->removeDefinition('rollerworks_datagrid.request_uri_provider.request_service');
-            $container->removeDefinition('rollerworks_datagrid.event_subscriber.request');
+            $container->setAlias('rollerworks_datagrid.request_uri_provider', new Alias('rollerworks_datagrid.request_uri_provider.request_stack', false));
         } else {
             // Symfony 2.3
-            $definition->addArgument(new Reference('rollerworks_datagrid.request_uri_provider.request_service'));
-
-            $container->removeDefinition('rollerworks_datagrid.request_uri_provider.request_stack');
+            $container->setAlias('rollerworks_datagrid.request_uri_provider', new Alias('rollerworks_datagrid.request_uri_provider.request_service', false));
         }
     }
 }

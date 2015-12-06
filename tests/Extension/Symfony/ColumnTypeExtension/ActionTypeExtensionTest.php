@@ -11,6 +11,7 @@
 
 namespace Rollerworks\Bundle\DatagridBundle\Tests\Extension\Symfony\ColumnTypeExtension;
 
+use Prophecy\Argument;
 use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\ColumnTypeExtension\ActionTypeExtension;
 use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\RequestUriProviderInterface;
 use Rollerworks\Component\Datagrid\PreloadedExtension;
@@ -22,37 +23,37 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
     protected function getExtensions()
     {
         $urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
-        $urlGenerator->generate('entity_edit', ['id' => 42], false)->will(
+        $urlGenerator->generate('entity_edit', ['id' => 42], Argument::any())->will(
             function ($args) {
                 return '/entity/'.$args[1]['id'].'/edit';
             }
         );
 
-        $urlGenerator->generate('entity_edit', ['id' => 42], false)->will(
+        $urlGenerator->generate('entity_edit', ['id' => 42], Argument::any())->will(
             function ($args) {
                 return '/entity/'.$args[1]['id'].'/edit';
             }
         );
 
-        $urlGenerator->generate('entity_edit', ['id' => 42, 'foo' => 'bar'], false)->will(
+        $urlGenerator->generate('entity_edit', ['id' => 42, 'foo' => 'bar'], Argument::any())->will(
             function ($args) {
                 return '/entity/'.$args[1]['id'].'/edit?foo=bar';
             }
         );
 
-        $urlGenerator->generate('entity_delete', ['id' => 42], false)->will(
+        $urlGenerator->generate('entity_delete', ['id' => 42], Argument::any())->will(
             function ($args) {
                 return '/entity/'.$args[1]['id'].'/delete';
             }
         );
 
-        $urlGenerator->generate('entity_list', [], false)->will(
+        $urlGenerator->generate('entity_list', [], Argument::any())->will(
             function () {
                 return '/entity/list';
             }
         );
 
-        $urlGenerator->generate('entity_list', ['filter' => 'something', 'user' => 'sheldon'], false)->will(
+        $urlGenerator->generate('entity_list', ['filter' => 'something', 'user' => 'sheldon'], Argument::any())->will(
             function () {
                 return '/list/?user=sheldon&filter=something';
             }

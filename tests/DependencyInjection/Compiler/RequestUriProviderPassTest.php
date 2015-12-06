@@ -31,14 +31,10 @@ class RequestUriProviderPassTest extends AbstractCompilerPassTestCase
     {
         $this->compile();
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(
-            'rollerworks_datagrid.column_extension.action',
-            1,
-            new Reference('rollerworks_datagrid.request_uri_provider.request_service')
+        $this->assertContainerBuilderHasAlias(
+            'rollerworks_datagrid.request_uri_provider',
+            'rollerworks_datagrid.request_uri_provider.request_service'
         );
-
-        $this->assertFalse($this->container->hasDefinition('rollerworks_datagrid.request_uri_provider.request_stack'));
-        $this->assertContainerBuilderHasServiceDefinitionWithTag('rollerworks_datagrid.event_subscriber.request', 'kernel.event_subscriber');
     }
 
     public function testSymfony24AndHigherRequestStack()
@@ -46,13 +42,9 @@ class RequestUriProviderPassTest extends AbstractCompilerPassTestCase
         $this->registerService('request_stack', 'stdClass');
         $this->compile();
 
-        $this->assertFalse($this->container->hasDefinition('rollerworks_datagrid.request_uri_provider.request_service'));
-        $this->assertFalse($this->container->hasDefinition('rollerworks_datagrid.event_subscriber.request'));
-
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(
-            'rollerworks_datagrid.column_extension.action',
-            1,
-            new Reference('rollerworks_datagrid.request_uri_provider.request_stack')
+        $this->assertContainerBuilderHasAlias(
+            'rollerworks_datagrid.request_uri_provider',
+            'rollerworks_datagrid.request_uri_provider.request_stack'
         );
     }
 
