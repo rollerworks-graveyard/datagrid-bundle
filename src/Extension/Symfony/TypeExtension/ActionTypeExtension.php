@@ -9,19 +9,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Bundle\DatagridBundle\Extension\Symfony\ColumnTypeExtension;
+namespace Rollerworks\Bundle\DatagridBundle\Extension\Symfony\TypeExtension;
 
-use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\RequestUriProviderInterface;
-use Rollerworks\Component\Datagrid\Column\AbstractColumnTypeExtension;
+use Rollerworks\Component\Datagrid\Column\AbstractTypeExtension;
+use Rollerworks\Component\Datagrid\Extension\Core\Type\ActionType;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @author Sebastiaan Stok <s.stok@rollerscapes.net>
  */
-class ActionTypeExtension extends AbstractColumnTypeExtension
+class ActionTypeExtension extends AbstractTypeExtension
 {
     /**
      * Router to generate urls.
@@ -31,24 +31,24 @@ class ActionTypeExtension extends AbstractColumnTypeExtension
     private $router;
 
     /**
-     * RequestUriProvider.
+     * RequestStack.
      *
      * This is used for getting the current URI for redirects.
      *
-     * @var RequestUriProviderInterface
+     * @var RequestStack
      */
-    private $requestUriProvider;
+    private $requestStack;
 
     /**
      * Constructor.
      *
-     * @param UrlGeneratorInterface       $router
-     * @param RequestUriProviderInterface $requestUriProvider
+     * @param UrlGeneratorInterface $router
+     * @param RequestStack          $requestStack
      */
-    public function __construct(UrlGeneratorInterface $router, RequestUriProviderInterface $requestUriProvider)
+    public function __construct(UrlGeneratorInterface $router, RequestStack $requestStack)
     {
         $this->router = $router;
-        $this->requestUriProvider = $requestUriProvider;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -98,32 +98,18 @@ class ActionTypeExtension extends AbstractColumnTypeExtension
                         );
                     }
 
-                    return $this->requestUriProvider->getRequestUri();
+                    return $this->requestStack->getMasterRequest()->getRequestUri();
                 },
             ]
         );
 
-        if ($resolver instanceof OptionsResolverInterface) {
-            $resolver->setAllowedTypes(
-                [
-                    'route_name' => ['string', 'null'],
-                    'parameters_field_mapping' => ['array'],
-                    'additional_parameters' => ['array'],
+        $resolver->setAllowedTypes('route_name', ['string', 'null']);
+        $resolver->setAllowedTypes('parameters_field_mapping', ['array']);
+        $resolver->setAllowedTypes('additional_parameters', ['array']);
 
-                    'redirect_route' => ['string', 'null'],
-                    'redirect_parameters_field_mapping' => ['array'],
-                    'redirect_additional_parameters' => ['array'],
-                ]
-            );
-        } else {
-            $resolver->setAllowedTypes('route_name', ['string', 'null']);
-            $resolver->setAllowedTypes('parameters_field_mapping', ['array']);
-            $resolver->setAllowedTypes('additional_parameters', ['array']);
-
-            $resolver->setAllowedTypes('redirect_route', ['string', 'null']);
-            $resolver->setAllowedTypes('redirect_parameters_field_mapping', ['array']);
-            $resolver->setAllowedTypes('redirect_additional_parameters', ['array']);
-        }
+        $resolver->setAllowedTypes('redirect_route', ['string', 'null']);
+        $resolver->setAllowedTypes('redirect_parameters_field_mapping', ['array']);
+        $resolver->setAllowedTypes('redirect_additional_parameters', ['array']);
     }
 
     /**
@@ -131,7 +117,7 @@ class ActionTypeExtension extends AbstractColumnTypeExtension
      */
     public function getExtendedType()
     {
-        return 'action';
+        return ActionType::class;
     }
 
     private function createRouteGenerator($routeName, $referenceType, array $fieldMapping, array $additionalParameters)

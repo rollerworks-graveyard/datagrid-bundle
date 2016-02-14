@@ -20,8 +20,8 @@ final class RollerworksDatagridBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
+        $container->addCompilerPass(new CompilerPass\TwigRenderEnginePass());
         $container->addCompilerPass(new CompilerPass\ExtensionPass());
-        $container->addCompilerPass(new CompilerPass\RequestUriProviderPass());
     }
 
     public function getContainerExtension()

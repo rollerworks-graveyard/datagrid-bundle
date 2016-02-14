@@ -11,14 +11,11 @@
 
 namespace Rollerworks\Bundle\DatagridBundle\DependencyInjection\Compiler;
 
-use Rollerworks\Component\Datagrid\Twig\Extension\DatagridExtension as TwigDatagridExtension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Adds all services with the tags "rollerworks_datagrid.column_type" and "rollerworks_datagrid.column_extension" as
+ * Adds all services with the tags "rollerworks_datagrid.type" and "rollerworks_datagrid.type_extension" as
  * arguments of the "rollerworks_datagrid.extension" service.
  *
  * @author Sebastiaan Stok <s.stok@rollerscapes.net>
@@ -36,59 +33,46 @@ class ExtensionPass implements CompilerPassInterface
 
         $definition = $container->getDefinition('rollerworks_datagrid.extension');
 
-        $this->processTwig($container);
-        $this->processExtensions($container);
-        $this->processTypes($definition, $container);
-        $this->processTypeExtensions($definition, $container);
-    }
-
-    private function processTwig(ContainerBuilder $container)
-    {
-        $reflection = new \ReflectionClass(TwigDatagridExtension::class);
-        $extensionFolder = dirname(dirname(dirname($reflection->getFileName())));
-
-        $container->getDefinition('twig.loader.filesystem')->addMethodCall(
-            'addPath',
-            [$extensionFolder.'/Resources/theme']
-        );
-    }
-
-    private function processExtensions(ContainerBuilder $container)
-    {
-        if (!$container->hasDefinition('rollerworks_datagrid.registry')) {
-            return;
-        }
-
-        $definition = $container->getDefinition('rollerworks_datagrid.registry');
-        $extensions = $definition->getArgument(0);
-
-        foreach (array_keys($container->findTaggedServiceIds('rollerworks_datagrid.extension')) as $serviceId) {
-            $extensions[] = new Reference($serviceId);
-        }
-
-        $definition->replaceArgument(0, $extensions);
-    }
-
-    private function processTypes(Definition $definition, ContainerBuilder $container)
-    {
+        // Builds an array with fully-qualified type class names as keys and service IDs as values
         $types = [];
 
-        foreach ($container->findTaggedServiceIds('rollerworks_datagrid.column_type') as $serviceId => $tag) {
-            $alias = isset($tag[0]['alias']) ? $tag[0]['alias'] : $serviceId;
-            // Flip, because we want tag aliases (= type identifiers) as keys
-            $types[$alias] = $serviceId;
+        foreach ($container->findTaggedServiceIds('rollerworks_datagrid.type') as $serviceId => $tag) {
+            $serviceDefinition = $container->getDefinition($serviceId);
+            if (!$serviceDefinition->isPublic()) {
+                throw new \InvalidArgumentException(
+                    sprintf('The service "%s" must be public as datagrid types are lazy-loaded.', $serviceId)
+                );
+            }
+
+            // Support type access by FQCN
+            $types[$serviceDefinition->getClass()] = $serviceId;
         }
 
         $definition->replaceArgument(1, $types);
-    }
 
-    private function processTypeExtensions(Definition $definition, ContainerBuilder $container)
-    {
         $typeExtensions = [];
 
-        foreach ($container->findTaggedServiceIds('rollerworks_datagrid.column_extension') as $serviceId => $tag) {
-            $alias = isset($tag[0]['alias']) ? $tag[0]['alias'] : $serviceId;
-            $typeExtensions[$alias][] = $serviceId;
+        foreach ($container->findTaggedServiceIds('rollerworks_datagrid.type_extension') as $serviceId => $tag) {
+            $serviceDefinition = $container->getDefinition($serviceId);
+            if (!$serviceDefinition->isPublic()) {
+                throw new \InvalidArgumentException(
+                    sprintf('The service "%s" must be public as datagrid type extensions are lazy-loaded.', $serviceId)
+                );
+            }
+
+            if (isset($tag[0]['extended_type'])) {
+                $extendedType = $tag[0]['extended_type'];
+            } else {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Tagged datagrid type extension must have the extended type configured using the '.
+                        'extended_type/extended-type attribute, none was configured for the "%s" service.',
+                        $serviceId
+                    )
+                );
+            }
+
+            $typeExtensions[$extendedType][] = $serviceId;
         }
 
         $definition->replaceArgument(2, $typeExtensions);
