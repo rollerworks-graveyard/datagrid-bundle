@@ -1,0 +1,3 @@
+search:
+    path: /datagrid
+    defaults: { _controller: "AppBundle:Datagrid:datagrid" }

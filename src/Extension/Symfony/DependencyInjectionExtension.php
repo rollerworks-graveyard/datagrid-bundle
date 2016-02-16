@@ -12,7 +12,7 @@
 namespace Rollerworks\Bundle\DatagridBundle\Extension\Symfony;
 
 use Rollerworks\Component\Datagrid\DatagridExtensionInterface;
-use Rollerworks\Component\Datagrid\DatagridInterface;
+use Rollerworks\Component\Datagrid\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class DependencyInjectionExtension implements DatagridExtensionInterface
@@ -25,98 +25,72 @@ final class DependencyInjectionExtension implements DatagridExtensionInterface
     /**
      * @var string[]
      */
-    private $columnTypes = [];
+    private $typeServiceIds = [];
 
     /**
      * @var array[]
      */
-    private $columnExtensions = [];
-
-    /**
-     * @var string[]
-     */
-    private $gridSubscriberServiceIds = [];
+    private $typeExtensionServiceIds = [];
 
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container                Symfony services container object
-     * @param string[]           $columnTypes              column-type service-ids (type => service-id )
-     * @param array[]            $columnExtensions         column-type extension service-ids (type => [[service-ids])
-     * @param array              $gridSubscriberServiceIds Datagrid subscriber service-ids ([service-id, service-id2])
+     * @param ContainerInterface $container               Symfony services container object
+     * @param string[]           $typeServiceIds          column-type service-ids (type => service-id )
+     * @param array[]            $typeExtensionServiceIds column-type extension service-ids (type => [[service-ids])
      */
-    public function __construct(
-        ContainerInterface $container,
-        array $columnTypes,
-        array $columnExtensions,
-        array $gridSubscriberServiceIds = []
-    ) {
+    public function __construct(ContainerInterface $container, array $typeServiceIds, array $typeExtensionServiceIds)
+    {
         $this->container = $container;
-        $this->columnTypes = $columnTypes;
-        $this->columnExtensions = $columnExtensions;
-        $this->gridSubscriberServiceIds = $gridSubscriberServiceIds;
+        $this->typeServiceIds = $typeServiceIds;
+        $this->typeExtensionServiceIds = $typeExtensionServiceIds;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function registerListeners(DatagridInterface $datagrid)
+    public function getType($name)
     {
-        $subscribers = [];
-
-        foreach ($this->gridSubscriberServiceIds as $alias => $subscriberName) {
-            $subscribers[] = $this->container->get($this->gridSubscriberServiceIds[$alias]);
-        }
-
-        return $subscribers;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getColumnType($name)
-    {
-        if (!isset($this->columnTypes[$name])) {
-            throw new \InvalidArgumentException(
-                sprintf('The field type "%s" is not registered with the service container.', $name)
+        if (!isset($this->typeServiceIds[$name])) {
+            throw new InvalidArgumentException(
+                sprintf('The column type "%s" is not registered with the service container.', $name)
             );
         }
 
-        $type = $this->container->get($this->columnTypes[$name]);
-
-        if ($type->getName() !== $name) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'The type name specified for the service "%s" does not match the actual name.'.
-                    'Expected "%s", given "%s"',
-                    $this->columnTypes[$name],
-                    $name,
-                    $type->getName()
-                )
-            );
-        }
-
-        return $type;
+        return $this->container->get($this->typeServiceIds[$name]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasColumnType($name)
+    public function hasType($name)
     {
-        return isset($this->columnTypes[$name]);
+        return isset($this->typeServiceIds[$name]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getColumnTypeExtensions($name)
+    public function getTypeExtensions($name)
     {
         $extensions = [];
 
-        if (isset($this->columnExtensions[$name])) {
-            foreach ($this->columnExtensions[$name] as $serviceId) {
-                $extensions[] = $this->container->get($serviceId);
+        if (isset($this->typeExtensionServiceIds[$name])) {
+            foreach ($this->typeExtensionServiceIds[$name] as $serviceId) {
+                $extensions[] = $extension = $this->container->get($serviceId);
+
+                // validate result of getExtendedType() to ensure it is consistent with the service definition
+                if ($extension->getExtendedType() !== $name) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            'The extended type specified for the service "%s" does not match the actual extended type. '.
+                            'Expected "%s", given "%s".',
+                            $serviceId,
+                            $name,
+                            $extension->getExtendedType()
+                        )
+                    );
+                }
             }
         }
 
@@ -126,8 +100,8 @@ final class DependencyInjectionExtension implements DatagridExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function hasColumnTypeExtensions($name)
+    public function hasTypeExtensions($name)
     {
-        return isset($this->columnExtensions[$name]);
+        return isset($this->typeExtensionServiceIds[$name]);
     }
 }

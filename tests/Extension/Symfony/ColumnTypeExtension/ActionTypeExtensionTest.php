@@ -12,10 +12,12 @@
 namespace Rollerworks\Bundle\DatagridBundle\Tests\Extension\Symfony\ColumnTypeExtension;
 
 use Prophecy\Argument;
-use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\ColumnTypeExtension\ActionTypeExtension;
-use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\RequestUriProviderInterface;
+use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\TypeExtension\ActionTypeExtension;
+use Rollerworks\Component\Datagrid\Extension\Core\Type\ActionType;
 use Rollerworks\Component\Datagrid\PreloadedExtension;
 use Rollerworks\Component\Datagrid\Test\ColumnTypeTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ActionTypeExtensionTest extends ColumnTypeTestCase
@@ -59,15 +61,15 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             }
         );
 
-        $requestUriProvider = $this->prophesize(RequestUriProviderInterface::class);
-        $requestUriProvider->getRequestUri()->willReturn('/datagrid');
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('/datagrid'));
 
         return [
             new PreloadedExtension(
                 [],
                 [
-                    'action' => [
-                        new ActionTypeExtension($urlGenerator->reveal(), $requestUriProvider->reveal()),
+                    ActionType::class => [
+                        new ActionTypeExtension($urlGenerator->reveal(), $requestStack),
                     ],
                 ]
             ),
@@ -76,30 +78,34 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
 
     protected function getTestedType()
     {
-        return 'action';
+        return ActionType::class;
     }
 
-    public function testPassLabelToView()
+    public function testPassLabelToHeaderView()
     {
         $column = $this->factory->createColumn(
             'edit',
             $this->getTestedType(),
-            $this->datagrid,
             [
-                'content' => 'My label',
-                'field_mapping' => ['key'],
+                'label' => 'My label',
+                'data_provider' => function ($data) {
+                    return ['key' => $data->key];
+                },
                 'uri_scheme' => '/entity/{key}/edit',
             ]
         );
 
+        $datagrid = $this->factory->createDatagrid('grid', [$column]);
+
         $object = new \stdClass();
         $object->key = ' foo ';
-        $this->datagrid->setData([1 => $object]);
 
-        $datagridView = $this->datagrid->createView();
-        $view = $column->createHeaderView($datagridView);
+        $datagrid->setData([1 => $object]);
 
-        $this->assertEquals('My label', $view->label);
+        $view = $datagrid->createView();
+        $view = $column->createHeaderView($view);
+
+        $this->assertSame('My label', $view->label);
     }
 
     public function testActionWithAttr()
@@ -110,6 +116,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'content' => 'edit',
             'attr' => ['class' => 'i-edit'],
             'url_attr' => ['data-new-window' => true],
+            'data_provider' => function ($data) {
+                return ['key' => $data->key];
+            },
         ];
 
         $expectedAttributesAttributes = [
@@ -129,6 +138,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'redirect_uri' => null,
             'uri_scheme' => function ($values) {
                 return '/entity/'.$values['key'].'/delete';
+            },
+            'data_provider' => function ($data) {
+                return ['key' => $data->key];
             },
         ];
 
@@ -150,6 +162,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'content' => function ($values) {
                 return 'Delete #'.$values['key'];
             },
+            'data_provider' => function ($data) {
+                return ['key' => $data->key];
+            },
         ];
 
         $expectedAttributes = [
@@ -168,6 +183,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'uri_scheme' => '/entity/{key}/edit',
             'content' => 'edit',
             'redirect_uri' => '/entity/list',
+            'data_provider' => function ($data) {
+                return ['key' => $data->key];
+            },
         ];
 
         $expectedAttributes = [
@@ -186,6 +204,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'uri_scheme' => '/entity/{key}/edit?foo=bar',
             'content' => 'delete',
             'redirect_uri' => '/entity/list?filter=something',
+            'data_provider' => function ($data) {
+                return ['key' => $data->key];
+            },
         ];
 
         $expectedAttributes = [
@@ -206,6 +227,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'redirect_uri' => function ($values) {
                 return '/entity/list/?last-entity='.$values['key'];
             },
+            'data_provider' => function ($data) {
+                return ['key' => $data->key];
+            },
         ];
 
         $expectedAttributes = [
@@ -224,7 +248,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'uri_scheme' => '/entity/{id}/edit?name={username}',
             'redirect_uri' => null,
             'content' => 'edit',
-            'field_mapping' => ['id' => 'id', 'username' => 'name'],
+            'data_provider' => function ($data) {
+                return ['id' => $data->id, 'username' => $data->name];
+            },
         ];
 
         $expectedAttributes = [
@@ -251,7 +277,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'route_name' => 'entity_edit',
             'parameters_field_mapping' => ['id' => 'id'],
             'content' => 'edit',
-            'field_mapping' => ['id' => 'id', 'username' => 'name'],
+            'data_provider' => function ($data) {
+                return ['id' => $data->id, 'username' => $data->name];
+            },
         ];
 
         $expectedAttributes = [
@@ -277,7 +305,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'parameters_field_mapping' => ['id' => 'id'],
             'additional_parameters' => ['foo' => 'bar'],
             'content' => 'edit',
-            'field_mapping' => ['id' => 'id', 'username' => 'name'],
+            'data_provider' => function ($data) {
+                return ['id' => $data->id, 'username' => $data->name];
+            },
         ];
 
         $expectedAttributes = [
@@ -303,7 +333,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'redirect_route' => 'entity_list',
             'parameters_field_mapping' => ['id' => 'id'],
             'content' => 'edit',
-            'field_mapping' => ['id' => 'id', 'username' => 'name'],
+            'data_provider' => function ($data) {
+                return ['id' => $data->id, 'username' => $data->name];
+            },
         ];
 
         $expectedAttributes = [
@@ -334,7 +366,9 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             'redirect_additional_parameters' => ['filter' => 'something'],
 
             'content' => 'edit',
-            'field_mapping' => ['id' => 'id', 'username' => 'name'],
+            'data_provider' => function ($data) {
+                return ['id' => $data->id, 'username' => $data->name];
+            },
         ];
 
         $expectedAttributes = [

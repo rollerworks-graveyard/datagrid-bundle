@@ -6,65 +6,40 @@
 
     <services>
         <!-- CoreExtension -->
-        <service id="rollerworks_datagrid.column_type.field" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\ColumnType">
-            <tag name="rollerworks_datagrid.column_type" alias="column" />
+        <service id="rollerworks_datagrid.type.column" class="Rollerworks\Component\Datagrid\Extension\Core\Type\ColumnType">
+            <tag name="rollerworks_datagrid.type" />
+            <argument type="service" id="property_accessor" />
         </service>
-        <service id="rollerworks_datagrid.column_type.datetime" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\DateTimeType">
-            <tag name="rollerworks_datagrid.column_type" alias="datetime" />
+        <service id="rollerworks_datagrid.type.datetime" class="Rollerworks\Component\Datagrid\Extension\Core\Type\DateTimeType">
+            <tag name="rollerworks_datagrid.type" />
         </service>
-
-        <service id="rollerworks_datagrid.column_type.money" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\MoneyType">
-            <tag name="rollerworks_datagrid.column_type" alias="money" />
+        <service id="rollerworks_datagrid.type.money" class="Rollerworks\Component\Datagrid\Extension\Core\Type\MoneyType">
+            <tag name="rollerworks_datagrid.type" />
         </service>
-
-        <service id="rollerworks_datagrid.column_type.number" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\NumberType">
-            <tag name="rollerworks_datagrid.column_type" alias="number" />
+        <service id="rollerworks_datagrid.type.number" class="Rollerworks\Component\Datagrid\Extension\Core\Type\NumberType">
+            <tag name="rollerworks_datagrid.type" />
         </service>
-
-        <service id="rollerworks_datagrid.column_type.text" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\TextType">
-            <tag name="rollerworks_datagrid.column_type" alias="text" />
+        <service id="rollerworks_datagrid.type.text" class="Rollerworks\Component\Datagrid\Extension\Core\Type\TextType">
+            <tag name="rollerworks_datagrid.type" />
         </service>
-
-        <service id="rollerworks_datagrid.column_type.boolean" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\BooleanType">
-            <tag name="rollerworks_datagrid.column_type" alias="boolean" />
+        <service id="rollerworks_datagrid.type.boolean" class="Rollerworks\Component\Datagrid\Extension\Core\Type\BooleanType">
+            <tag name="rollerworks_datagrid.type" />
         </service>
-
-        <service id="rollerworks_datagrid.column_type.action" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\ActionType">
-            <tag name="rollerworks_datagrid.column_type" alias="action" />
+        <service id="rollerworks_datagrid.type.action" class="Rollerworks\Component\Datagrid\Extension\Core\Type\ActionType">
+            <tag name="rollerworks_datagrid.type" />
         </service>
-
-        <service id="rollerworks_datagrid.column_type.batch" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\BatchType">
-            <tag name="rollerworks_datagrid.column_type" alias="batch" />
+        <service id="rollerworks_datagrid.type.batch" class="Rollerworks\Component\Datagrid\Extension\Core\Type\BatchType">
+            <tag name="rollerworks_datagrid.type" />
         </service>
-
-        <service id="rollerworks_datagrid.column_type.model" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\ModelType">
-            <tag name="rollerworks_datagrid.column_type" alias="model" />
+        <service id="rollerworks_datagrid.type.compound_column" class="Rollerworks\Component\Datagrid\Extension\Core\Type\CompoundColumnType">
+            <tag name="rollerworks_datagrid.type" />
         </service>
-
-        <service id="rollerworks_datagrid.column_type.compound_column" class="Rollerworks\Component\Datagrid\Extension\Core\ColumnType\CompoundColumnType">
-            <tag name="rollerworks_datagrid.column_type" alias="compound_column" />
-        </service>
-
-        <!-- ColumnOrderExtension -->
-        <!-- TODO services -->
 
         <!-- ActionTypeExtension -->
-        <service id="rollerworks_datagrid.column_extension.action" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\ColumnTypeExtension\ActionTypeExtension">
-            <tag name="rollerworks_datagrid.column_extension" alias="action" />
+        <service id="rollerworks_datagrid.column_extension.action" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\TypeExtension\ActionTypeExtension">
+            <tag name="rollerworks_datagrid.column_extension" extended-type="action" />
             <argument type="service" id="router" />
-            <argument type="service" id="rollerworks_datagrid.request_uri_provider" />
-
-            <!-- RequestUriProvider is set by RequestUriProviderPass -->
-        </service>
-
-        <!-- Symfony >=2.4 -->
-        <service id="rollerworks_datagrid.request_uri_provider.request_stack" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\RequestUriProviderByRequestStack" public="false">
             <argument type="service" id="request_stack" />
-        </service>
-
-        <!-- Symfony 2.3 -->
-        <service id="rollerworks_datagrid.request_uri_provider.request_service" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\RequestUriProviderByRequestService" public="false">
-            <argument type="service" id="service_container" />
         </service>
     </services>
 </container>

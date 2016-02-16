@@ -9,13 +9,12 @@
         <service id="rollerworks_datagrid.resolved_column_type_factory" class="Rollerworks\Component\Datagrid\Column\ResolvedColumnTypeFactory" />
 
         <!-- ColumnTypeRegistry -->
-        <service id="rollerworks_datagrid.column_type_registry" class="Rollerworks\Component\Datagrid\Column\ColumnTypeRegistry">
+        <service id="rollerworks_datagrid.type_registry" class="Rollerworks\Component\Datagrid\Column\ColumnTypeRegistry" public="false">
             <argument type="collection">
                 <!--
                 We don't need to be able to add more extensions.
                 * more types can be registered with the rollerworks_datagrid.column_type tag
                 * more type extensions can be registered with the rollerworks_datagrid.column_extension tag
-                * other extensions can be registered with the rollerworks_datagrid.extension tag
                 -->
                 <argument type="service" id="rollerworks_datagrid.extension" />
             </argument>
@@ -24,21 +23,16 @@
 
         <!-- DatagridFactory -->
         <service id="rollerworks_datagrid.factory" class="Rollerworks\Component\Datagrid\DatagridFactory">
-            <argument type="service" id="rollerworks_datagrid.column_type_registry" />
+            <argument type="service" id="rollerworks_datagrid.type_registry" />
             <argument type="service" id="rollerworks_datagrid.resolved_column_type_factory" />
-
-            <!-- FIXME this needs to be configurable -->
-            <argument type="service" id="rollerworks_datagrid.data_mapper.property_accessor" />
         </service>
-
-        <service id="rollerworks_datagrid.data_mapper.property_accessor" class="Rollerworks\Component\Datagrid\DataMapper\PropertyAccessorMapper" public="false" />
 
         <!-- DependencyInjectionExtension -->
         <service id="rollerworks_datagrid.extension" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\DependencyInjectionExtension" public="false">
             <argument type="service" id="service_container" />
-            <!-- All services with tag "rollerworks_datagrid.column_type" are inserted here by ExtensionPass -->
+            <!-- All services with tag "rollerworks_datagrid.type" are inserted here by ExtensionPass -->
             <argument type="collection" />
-            <!-- All services with tag "rollerworks_datagrid.column_extension" are inserted here by ExtensionPass -->
+            <!-- All services with tag "rollerworks_datagrid.type_extension" are inserted here by ExtensionPass -->
             <argument type="collection" />
         </service>
     </services>
