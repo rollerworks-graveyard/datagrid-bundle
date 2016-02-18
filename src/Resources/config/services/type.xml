@@ -37,7 +37,7 @@
 
         <!-- ActionTypeExtension -->
         <service id="rollerworks_datagrid.column_extension.action" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\TypeExtension\ActionTypeExtension">
-            <tag name="rollerworks_datagrid.column_extension" extended-type="action" />
+            <tag name="rollerworks_datagrid.type_extension" extended-type="Rollerworks\Component\Datagrid\Extension\Core\Type\ActionType" />
             <argument type="service" id="router" />
             <argument type="service" id="request_stack" />
         </service>
