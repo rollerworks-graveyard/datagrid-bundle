@@ -29,6 +29,7 @@ final class DatagridFactoryTest extends FunctionalTestCase
         <th><span>First name</span></th>
         <th><span>Last name</span></th>
         <th><span>Registered on</span></th>
+        <th><span>Edit action</span></th>
     </tr>
     </thead>
     <tbody>
@@ -45,7 +46,7 @@ final class DatagridFactoryTest extends FunctionalTestCase
         <td>
             <div>1980-12-05 17:00:00</div>
         </td>
-    </tr>
+        <a href="#?redirect_uri=%2Fdatagrid">Edit action</a></tr>
     <tr>
         <td>
             <div>1</div>
@@ -59,7 +60,7 @@ final class DatagridFactoryTest extends FunctionalTestCase
         <td>
             <div>1999-12-05 17:00:00</div>
         </td>
-    </tr>
+        <a href="#?redirect_uri=%2Fdatagrid">Edit action</a></tr>
     <tr>
         <td>
             <div>50</div>
@@ -73,7 +74,7 @@ final class DatagridFactoryTest extends FunctionalTestCase
         <td>
             <div>2012-08-05 14:12:00</div>
         </td>
-    </tr>
+        <a href="#?redirect_uri=%2Fdatagrid">Edit action</a></tr>
     </tbody>
 </table>
 HTML

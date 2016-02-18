@@ -25,6 +25,17 @@ final class DatagridController extends Controller
             ->add('firstName', Type\TextType::class)
             ->add('lastName', Type\TextType::class)
             ->add('regDate', Type\DateTimeType::class, ['format' => 'yyyy-MM-dd HH:mm:ss', 'label' => 'Registered on'])
+            ->add(
+                'editAction',
+                Type\ActionType::class,
+                [
+                    'uri_scheme' => '#',
+                    'redirect_route' => null,
+                    'data_provider' => function ($data) {
+                        return ['id' => $data['id']];
+                    },
+                ]
+            )
             ->getDatagrid();
 
         $datagrid->setData([
