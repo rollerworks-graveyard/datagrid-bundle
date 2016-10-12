@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the RollerworksDatagrid package.
  *
@@ -20,8 +22,10 @@ final class RollerworksDatagridBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
+        $container->addCompilerPass(new CompilerPass\DatagridConfiguratorPass());
         $container->addCompilerPass(new CompilerPass\TwigRenderEnginePass());
         $container->addCompilerPass(new CompilerPass\ExtensionPass());
+        $container->addCompilerPass(new CompilerPass\RuntimeLoaderPass());
     }
 
     public function getContainerExtension()

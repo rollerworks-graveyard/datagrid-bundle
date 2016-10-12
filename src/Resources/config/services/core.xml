@@ -6,7 +6,7 @@
 
     <services>
         <!-- ResolvedColumnTypeFactory -->
-        <service id="rollerworks_datagrid.resolved_column_type_factory" class="Rollerworks\Component\Datagrid\Column\ResolvedColumnTypeFactory" />
+        <service id="rollerworks_datagrid.resolved_column_type_factory" class="Rollerworks\Component\Datagrid\Column\ResolvedColumnTypeFactory" public="false" />
 
         <!-- ColumnTypeRegistry -->
         <service id="rollerworks_datagrid.type_registry" class="Rollerworks\Component\Datagrid\Column\ColumnTypeRegistry" public="false">
@@ -21,10 +21,19 @@
             <argument type="service" id="rollerworks_datagrid.resolved_column_type_factory" />
         </service>
 
+        <!-- ContainerDatagridRegistry -->
+        <service id="rollerworks_datagrid.datagrid_registry" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\ContainerDatagridRegistry" public="false">
+            <argument type="service" id="service_container" />
+            <argument type="collection">
+                <!-- All services with tag "rollerworks_datagrid.datagrid_configurator" are inserted here by DatagridConfiguratorPass -->
+                <argument type="collection" />
+            </argument>
+        </service>
+
         <!-- DatagridFactory -->
         <service id="rollerworks_datagrid.factory" class="Rollerworks\Component\Datagrid\DatagridFactory">
             <argument type="service" id="rollerworks_datagrid.type_registry" />
-            <argument type="service" id="rollerworks_datagrid.resolved_column_type_factory" />
+            <argument type="service" id="rollerworks_datagrid.datagrid_registry" />
         </service>
 
         <!-- DependencyInjectionExtension -->

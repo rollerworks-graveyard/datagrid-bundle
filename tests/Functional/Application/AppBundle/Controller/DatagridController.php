@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the RollerworksDatagrid package.
  *
@@ -11,6 +13,8 @@
 
 namespace Rollerworks\Bundle\DatagridBundle\Tests\Functional\Application\AppBundle\Controller;
 
+use Rollerworks\Bundle\DatagridBundle\Tests\Functional\Application\AppBundle\Datagrid\GroupsDatagrid;
+use Rollerworks\Bundle\DatagridBundle\Tests\Functional\Application\AppBundle\Datagrid\UsersDatagrid;
 use Rollerworks\Component\Datagrid\Extension\Core\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -20,7 +24,7 @@ final class DatagridController extends Controller
     {
         $factory = $this->get('rollerworks_datagrid.factory');
 
-        $datagrid = $factory->createDatagridBuilder('users')
+        $datagrid = $factory->createDatagridBuilder()
             ->add('id', Type\NumberType::class)
             ->add('firstName', Type\TextType::class)
             ->add('lastName', Type\TextType::class)
@@ -30,13 +34,14 @@ final class DatagridController extends Controller
                 Type\ActionType::class,
                 [
                     'uri_scheme' => '#',
+                    'redirect_uri' => true,
                     'redirect_route' => null,
                     'data_provider' => function ($data) {
                         return ['id' => $data['id']];
                     },
                 ]
             )
-            ->getDatagrid();
+            ->getDatagrid('users');
 
         $datagrid->setData([
             ['id' => 0, 'firstName' => 'Doctor', 'lastName' => 'Who', 'regDate' => new \DateTime('1980-12-05 12:00:00 EST')],
@@ -44,6 +49,32 @@ final class DatagridController extends Controller
             ['id' => 50, 'firstName' => 'Spider', 'lastName' => 'Big', 'regDate' => new \DateTime('2012-08-05 09:12:00 EST')],
         ]);
 
-        return $this->render('AppBundle::users.html.twig', ['datagrid' => $datagrid->createView() ]);
+        return $this->render('AppBundle::users.html.twig', ['datagrid' => $datagrid->createView()]);
+    }
+
+    public function datagridByClassAction()
+    {
+        $factory = $this->get('rollerworks_datagrid.factory');
+        $datagrid = $factory->createDatagrid(UsersDatagrid::class);
+
+        $datagrid->setData([
+            ['id' => 0, 'firstName' => 'Doctor', 'lastName' => 'Who', 'regDate' => new \DateTime('1980-12-05 12:00:00 EST')],
+            ['id' => 1, 'firstName' => 'Homer', 'lastName' => 'Simpson', 'regDate' => new \DateTime('1999-12-05 12:00:00 EST')],
+            ['id' => 50, 'firstName' => 'Spider', 'lastName' => 'Big', 'regDate' => new \DateTime('2012-08-05 09:12:00 EST')],
+        ]);
+
+        return $this->render('AppBundle::users.html.twig', ['datagrid' => $datagrid->createView()]);
+    }
+
+    public function datagridByServiceAction()
+    {
+        $factory = $this->get('rollerworks_datagrid.factory');
+        $datagrid = $factory->createDatagrid(GroupsDatagrid::class);
+
+        $datagrid->setData([
+            ['id' => 0, 'firstName' => 'Doctor', 'lastName' => 'Who', 'regDate' => new \DateTime('1980-12-05 12:00:00 EST')],
+        ]);
+
+        return $this->render('AppBundle::users.html.twig', ['datagrid' => $datagrid->createView()]);
     }
 }

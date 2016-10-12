@@ -5,9 +5,23 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="rollerworks_datagrid.twig_extension" class="Rollerworks\Component\Datagrid\Twig\Extension\DatagridExtension">
+        <service id="rollerworks_datagrid.twig.extension" class="Rollerworks\Component\Datagrid\Twig\Extension\DatagridExtension">
             <tag name="twig.extension" />
+        </service>
+
+        <service id="rollerworks_datagrid.twig.render_engine" class="Rollerworks\Component\Datagrid\Twig\Renderer\TwigRendererEngine" public="false">
+            <argument type="service" id="twig" />
             <argument>%rollerworks_datagrid.twig.themes%</argument>
+        </service>
+
+        <service id="rollerworks_datagrid.twig_renderer" class="Rollerworks\Component\Datagrid\Twig\Renderer\TwigRenderer">
+            <tag name="twig.runtime" />
+            <argument type="service" id="rollerworks_datagrid.twig.render_engine" />
+        </service>
+
+        <!-- To removed once Symfony 3.2 is released -->
+        <service id="rollerworks_datagrid.twig.runtime_loader" class="Rollerworks\Component\Datagrid\Twig\DatagridRuntimeLoader" public="false">
+            <argument type="service" id="rollerworks_datagrid.twig.render_engine" />
         </service>
     </services>
 </container>

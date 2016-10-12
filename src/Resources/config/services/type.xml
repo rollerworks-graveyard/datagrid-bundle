@@ -5,36 +5,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <!-- CoreExtension -->
-        <service id="rollerworks_datagrid.type.column" class="Rollerworks\Component\Datagrid\Extension\Core\Type\ColumnType">
-            <tag name="rollerworks_datagrid.type" />
-            <argument type="service" id="property_accessor" />
-        </service>
-        <service id="rollerworks_datagrid.type.datetime" class="Rollerworks\Component\Datagrid\Extension\Core\Type\DateTimeType">
-            <tag name="rollerworks_datagrid.type" />
-        </service>
-        <service id="rollerworks_datagrid.type.money" class="Rollerworks\Component\Datagrid\Extension\Core\Type\MoneyType">
-            <tag name="rollerworks_datagrid.type" />
-        </service>
-        <service id="rollerworks_datagrid.type.number" class="Rollerworks\Component\Datagrid\Extension\Core\Type\NumberType">
-            <tag name="rollerworks_datagrid.type" />
-        </service>
-        <service id="rollerworks_datagrid.type.text" class="Rollerworks\Component\Datagrid\Extension\Core\Type\TextType">
-            <tag name="rollerworks_datagrid.type" />
-        </service>
-        <service id="rollerworks_datagrid.type.boolean" class="Rollerworks\Component\Datagrid\Extension\Core\Type\BooleanType">
-            <tag name="rollerworks_datagrid.type" />
-        </service>
-        <service id="rollerworks_datagrid.type.action" class="Rollerworks\Component\Datagrid\Extension\Core\Type\ActionType">
-            <tag name="rollerworks_datagrid.type" />
-        </service>
-        <service id="rollerworks_datagrid.type.batch" class="Rollerworks\Component\Datagrid\Extension\Core\Type\BatchType">
-            <tag name="rollerworks_datagrid.type" />
-        </service>
-        <service id="rollerworks_datagrid.type.compound_column" class="Rollerworks\Component\Datagrid\Extension\Core\Type\CompoundColumnType">
-            <tag name="rollerworks_datagrid.type" />
-        </service>
-
         <!-- ActionTypeExtension -->
         <service id="rollerworks_datagrid.column_extension.action" class="Rollerworks\Bundle\DatagridBundle\Extension\Symfony\TypeExtension\ActionTypeExtension">
             <tag name="rollerworks_datagrid.type_extension" extended-type="Rollerworks\Component\Datagrid\Extension\Core\Type\ActionType" />

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the RollerworksDatagrid package.
  *
@@ -59,7 +61,7 @@ class ActionTypeExtension extends AbstractTypeExtension
         $resolver->setDefaults(
             [
                 'route_name' => null,
-                'parameters_field_mapping' => [],
+                'parameters_mapping' => [],
                 'additional_parameters' => [],
                 'uri_scheme' => function (Options $options, $value) {
                     // Value was already provided so just use that one.
@@ -72,7 +74,7 @@ class ActionTypeExtension extends AbstractTypeExtension
                         return $this->createRouteGenerator(
                             $options['route_name'],
                             $options['reference_type'],
-                            $options['parameters_field_mapping'],
+                            $options['parameters_mapping'],
                             $options['additional_parameters']
                         );
                     }
@@ -80,7 +82,7 @@ class ActionTypeExtension extends AbstractTypeExtension
                 'reference_type' => UrlGeneratorInterface::ABSOLUTE_PATH,
 
                 'redirect_route' => null,
-                'redirect_parameters_field_mapping' => [],
+                'redirect_parameters_mapping' => null,
                 'redirect_additional_parameters' => [],
                 'redirect_uri' => function (Options $options, $value) {
                     // Value was already provided so just use that one.
@@ -93,40 +95,60 @@ class ActionTypeExtension extends AbstractTypeExtension
                         return $this->createRouteGenerator(
                             $options['redirect_route'],
                             $options['reference_type'],
-                            $options['redirect_parameters_field_mapping'],
+                            $options['redirect_parameters_mapping'],
                             $options['redirect_additional_parameters']
                         );
                     }
-
-                    return $this->requestStack->getMasterRequest()->getRequestUri();
                 },
             ]
         );
 
+        // Use a normalizer to allow disable/enable to use the current URI as
+        // redirect uri. This allows to 'redirect_uri' to eg
+        $resolver->setNormalizer(
+            'redirect_uri',
+            function (Options $options, $value) {
+                if ($value) {
+                    if (true === $value) {
+                        return $this->requestStack->getMasterRequest()->getRequestUri();
+                    }
+
+                    return $value === false ? null : $value;
+                }
+            }
+        );
+
         $resolver->setAllowedTypes('route_name', ['string', 'null']);
-        $resolver->setAllowedTypes('parameters_field_mapping', ['array']);
+        $resolver->setAllowedTypes('parameters_mapping', ['array', 'null']);
         $resolver->setAllowedTypes('additional_parameters', ['array']);
 
         $resolver->setAllowedTypes('redirect_route', ['string', 'null']);
-        $resolver->setAllowedTypes('redirect_parameters_field_mapping', ['array']);
+        $resolver->setAllowedTypes('redirect_parameters_mapping', ['array', 'null']);
         $resolver->setAllowedTypes('redirect_additional_parameters', ['array']);
+        $resolver->addAllowedTypes('redirect_uri', ['bool']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public function getExtendedType(): string
     {
         return ActionType::class;
     }
 
-    private function createRouteGenerator($routeName, $referenceType, array $fieldMapping, array $additionalParameters)
+    private function createRouteGenerator(string $routeName, int $referenceType, array $fieldMapping = null, array $additionalParameters)
     {
         return function (array $values) use ($routeName, $referenceType, $fieldMapping, $additionalParameters) {
             $routeParameters = [];
 
-            foreach ($fieldMapping as $parameterName => $mappingField) {
-                $routeParameters[$parameterName] = $values[$mappingField];
+            // When field-mapping for the route parameters is empty simple use the values.
+            // When no parameters are required, null should be used.
+            if ([] === $fieldMapping) {
+                $routeParameters = $values;
+            } elseif (null !== $fieldMapping) {
+                foreach ($fieldMapping as $parameterName => $mappingField) {
+                    $routeParameters[$parameterName] = $values[$mappingField];
+                }
             }
 
             return $this->router->generate(
