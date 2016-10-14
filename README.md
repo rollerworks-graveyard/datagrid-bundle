@@ -4,12 +4,12 @@ RollerworksDatagridBundle
 Main purpose of this bundle is to integrate [RollerworksDatagrid](https://github.com/rollerworks/rollerworks-datagrid)
 with any Symfony based application.
 
-    RollerworksDatagrid provides you with a powerful datagrid system.
+    RollerworksDatagrid - Datagrid system with a modular design and customizable.
 
 Requirements
 ------------
 
-You need at least the Symfony (Symfony FrameworkBundle) and the TwigBundle 2.3
+You need at least the Symfony (Symfony FrameworkBundle) and the TwigBundle 3.1
 and the Composer package manager for installing dependencies.
 
 Documentation
