@@ -8,6 +8,10 @@
          beStrictAboutTestsThatDoNotTestAnything="false"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
+
+        convertWarningsToExceptions="false"
+        convertErrorsToExceptions="false"
+        convertNoticesToExceptions="false"
 >
     <php>
         <ini name="error_reporting" value="-1"/>
