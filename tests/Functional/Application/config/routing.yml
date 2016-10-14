@@ -1,3 +1,11 @@
 search:
     path: /datagrid
     defaults: { _controller: "AppBundle:Datagrid:datagrid" }
+
+search_by_loader:
+    path: /datagrid-by-class
+    defaults: { _controller: "AppBundle:Datagrid:datagridByClass" }
+
+search_by_service:
+    path: /datagrid-by-service
+    defaults: { _controller: "AppBundle:Datagrid:datagridByService" }

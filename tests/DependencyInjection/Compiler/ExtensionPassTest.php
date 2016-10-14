@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the RollerworksDatagrid package.
  *
@@ -13,11 +15,10 @@ namespace Rollerworks\Bundle\DatagridBundle\Tests\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Rollerworks\Bundle\DatagridBundle\DependencyInjection\Compiler\ExtensionPass;
-use Rollerworks\Component\Datagrid\Extension\Core\Type\ColumnType;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Rollerworks\Bundle\DatagridBundle\Tests\Fixtures\Type;
 use Rollerworks\Bundle\DatagridBundle\Tests\Fixtures\TypeExtension;
+use Rollerworks\Component\Datagrid\Extension\Core\Type\ColumnType;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ExtensionPassTest extends AbstractCompilerPassTestCase
 {

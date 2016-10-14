@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the RollerworksDatagrid package.
  *
@@ -11,6 +13,7 @@
 
 namespace Rollerworks\Bundle\DatagridBundle\Extension\Symfony;
 
+use Rollerworks\Component\Datagrid\Column\ColumnTypeInterface;
 use Rollerworks\Component\Datagrid\DatagridExtensionInterface;
 use Rollerworks\Component\Datagrid\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -49,7 +52,7 @@ final class DependencyInjectionExtension implements DatagridExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function getType($name)
+    public function getType(string $name): ColumnTypeInterface
     {
         if (!isset($this->typeServiceIds[$name])) {
             throw new InvalidArgumentException(
@@ -63,7 +66,7 @@ final class DependencyInjectionExtension implements DatagridExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function hasType($name)
+    public function hasType(string $name): bool
     {
         return isset($this->typeServiceIds[$name]);
     }
@@ -71,7 +74,7 @@ final class DependencyInjectionExtension implements DatagridExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function getTypeExtensions($name)
+    public function getTypeExtensions(string $name): array
     {
         $extensions = [];
 
@@ -100,7 +103,7 @@ final class DependencyInjectionExtension implements DatagridExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function hasTypeExtensions($name)
+    public function hasTypeExtensions(string $name): bool
     {
         return isset($this->typeExtensionServiceIds[$name]);
     }

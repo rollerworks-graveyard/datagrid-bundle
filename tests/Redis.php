@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Bundle\DatagridBundle\Tests\Fixtures\Type;
-
-use Rollerworks\Component\Datagrid\Column\AbstractType;
-
-final class BarType extends AbstractType
-{
+// Poly fill for Redis, symfony defines this as a service
+// but the service validator chokes on the existence of this class.
+if (!class_exists('Redis')) {
+    final class Redis
+    {
+    }
 }

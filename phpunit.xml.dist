@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.5/phpunit.xsd"
          backupGlobals="false"
          colors="true"
          bootstrap="vendor/autoload.php"
          beStrictAboutTestsThatDoNotTestAnything="false"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
+
+        convertWarningsToExceptions="false"
+        convertErrorsToExceptions="false"
+        convertNoticesToExceptions="false"
 >
     <php>
         <ini name="error_reporting" value="-1"/>
@@ -15,17 +19,10 @@
         <ini name="intl.default_locale" value="en"/>
         <ini name="intl.error_level" value="0"/>
         <ini name="memory_limit" value="-1"/>
-
-        <!--
-        Disable E_USER_DEPRECATED, else composer.json needs to be very verbose
-        when using `DEPENDENCIES='low'`. This can be removed when support for Symfony 2 is dropped.
-        -->
-        <!-- php -r 'echo -1 & ~E_USER_DEPRECATED;' -->
-        <ini name="error_reporting" value="-16385"/>
     </php>
 
     <testsuites>
-        <testsuite name="RollerworksDatagrid Bundle Test Suite">
+        <testsuite name="RollerworksDatagrid Test Suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>

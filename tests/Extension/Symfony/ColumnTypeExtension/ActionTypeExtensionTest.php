@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the RollerworksDatagrid package.
  *
@@ -13,6 +15,7 @@ namespace Rollerworks\Bundle\DatagridBundle\Tests\Extension\Symfony\ColumnTypeEx
 
 use Prophecy\Argument;
 use Rollerworks\Bundle\DatagridBundle\Extension\Symfony\TypeExtension\ActionTypeExtension;
+use Rollerworks\Component\Datagrid\Datagrid;
 use Rollerworks\Component\Datagrid\Extension\Core\Type\ActionType;
 use Rollerworks\Component\Datagrid\PreloadedExtension;
 use Rollerworks\Component\Datagrid\Test\ColumnTypeTestCase;
@@ -22,7 +25,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ActionTypeExtensionTest extends ColumnTypeTestCase
 {
-    protected function getExtensions()
+    protected function getExtensions(): array
     {
         $urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
         $urlGenerator->generate('entity_edit', ['id' => 42], Argument::any())->will(
@@ -38,6 +41,12 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
         );
 
         $urlGenerator->generate('entity_edit', ['id' => 42, 'foo' => 'bar'], Argument::any())->will(
+            function ($args) {
+                return '/entity/'.$args[1]['id'].'/edit?foo=bar';
+            }
+        );
+
+        $urlGenerator->generate('entity_edit', ['id' => 42, 'username' => 'sheldon'], Argument::any())->will(
             function ($args) {
                 return '/entity/'.$args[1]['id'].'/edit?foo=bar';
             }
@@ -76,7 +85,7 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
         ];
     }
 
-    protected function getTestedType()
+    protected function getTestedType(): string
     {
         return ActionType::class;
     }
@@ -95,7 +104,7 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
             ]
         );
 
-        $datagrid = $this->factory->createDatagrid('grid', [$column]);
+        $datagrid = new Datagrid('grid', [$column]);
 
         $object = new \stdClass();
         $object->key = ' foo ';
@@ -123,6 +132,29 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
 
         $expectedAttributesAttributes = [
             'url' => '/entity/42/edit',
+            'content' => 'edit',
+            'attr' => ['class' => 'i-edit'],
+            'url_attr' => ['data-new-window' => true],
+        ];
+
+        $this->assertCellValueEquals(['key' => 42], 42, $options, $expectedAttributesAttributes);
+    }
+
+    public function testActionWithRedirectAsTrueGivesCurrentUri()
+    {
+        $options = [
+            'uri_scheme' => '/entity/{key}/edit',
+            'redirect_uri' => true,
+            'content' => 'edit',
+            'attr' => ['class' => 'i-edit'],
+            'url_attr' => ['data-new-window' => true],
+            'data_provider' => function ($data) {
+                return ['key' => $data->key];
+            },
+        ];
+
+        $expectedAttributesAttributes = [
+            'url' => '/entity/42/edit?redirect_uri=%2Fdatagrid',
             'content' => 'edit',
             'attr' => ['class' => 'i-edit'],
             'url_attr' => ['data-new-window' => true],
@@ -275,7 +307,7 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
     {
         $options = [
             'route_name' => 'entity_edit',
-            'parameters_field_mapping' => ['id' => 'id'],
+            'parameters_mapping' => ['id' => 'id'],
             'content' => 'edit',
             'data_provider' => function ($data) {
                 return ['id' => $data->id, 'username' => $data->name];
@@ -283,7 +315,33 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
         ];
 
         $expectedAttributes = [
-            'url' => '/entity/42/edit?redirect_uri=%2Fdatagrid',
+            'url' => '/entity/42/edit',
+            'content' => 'edit',
+            'attr' => [],
+            'url_attr' => [],
+        ];
+
+        $object = new \stdClass();
+        $object->id = 42;
+        $object->name = 'sheldon';
+
+        $data = [1 => $object];
+
+        $this->assertCellValueEquals(['id' => 42, 'username' => 'sheldon'], $data, $options, $expectedAttributes);
+    }
+
+    public function testActionWithRouteNameAndAutoParameters()
+    {
+        $options = [
+            'route_name' => 'entity_edit',
+            'content' => 'edit',
+            'data_provider' => function ($data) {
+                return ['id' => $data->id, 'username' => $data->name];
+            },
+        ];
+
+        $expectedAttributes = [
+            'url' => '/entity/42/edit?foo=bar',
             'content' => 'edit',
             'attr' => [],
             'url_attr' => [],
@@ -302,7 +360,8 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
     {
         $options = [
             'route_name' => 'entity_edit',
-            'parameters_field_mapping' => ['id' => 'id'],
+            'redirect_uri' => true,
+            'parameters_mapping' => ['id' => 'id'],
             'additional_parameters' => ['foo' => 'bar'],
             'content' => 'edit',
             'data_provider' => function ($data) {
@@ -331,7 +390,7 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
         $options = [
             'route_name' => 'entity_edit',
             'redirect_route' => 'entity_list',
-            'parameters_field_mapping' => ['id' => 'id'],
+            'parameters_mapping' => ['id' => 'id'],
             'content' => 'edit',
             'data_provider' => function ($data) {
                 return ['id' => $data->id, 'username' => $data->name];
@@ -358,11 +417,11 @@ class ActionTypeExtensionTest extends ColumnTypeTestCase
     {
         $options = [
             'route_name' => 'entity_edit',
-            'parameters_field_mapping' => ['id' => 'id'],
+            'parameters_mapping' => ['id' => 'id'],
             'additional_parameters' => ['foo' => 'bar'],
 
             'redirect_route' => 'entity_list',
-            'redirect_parameters_field_mapping' => ['user' => 'username'],
+            'redirect_parameters_mapping' => ['user' => 'username'],
             'redirect_additional_parameters' => ['filter' => 'something'],
 
             'content' => 'edit',

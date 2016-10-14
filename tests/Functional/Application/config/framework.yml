@@ -1,5 +1,8 @@
 framework:
-    translator:         { fallback: en }
+    translator:          false
+    validation:          false
+    assets:              false
+
     secret:              test
     router:
         resource: %kernel.root_dir%/config/routing.yml
@@ -9,7 +12,7 @@ framework:
     trusted_proxies:     []
     session:
         storage_id: session.storage.filesystem
-    test:                ~
+    test:                true
 
 twig:
     debug:            true

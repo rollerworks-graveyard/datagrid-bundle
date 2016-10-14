@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the RollerworksDatagrid package.
  *
@@ -27,6 +29,10 @@ class TwigRenderEnginePass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition('twig.loader.filesystem')) {
+            return;
+        }
+
         $reflection = new \ReflectionClass(TwigDatagridExtension::class);
         $extensionFolder = dirname(dirname(dirname($reflection->getFileName())));
 
