@@ -1,7 +1,8 @@
 /phpunit.xml
 /composer.lock
-.php_cs.cache
 *.phar
 /vendor/
 /bin/
 /doc/_build
+.php_cs.cache
+/tests/Extension/twig-perf
