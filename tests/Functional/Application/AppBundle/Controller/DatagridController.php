@@ -17,6 +17,7 @@ use Rollerworks\Bundle\DatagridBundle\Tests\Functional\Application\AppBundle\Dat
 use Rollerworks\Bundle\DatagridBundle\Tests\Functional\Application\AppBundle\Datagrid\UsersDatagrid;
 use Rollerworks\Component\Datagrid\Extension\Core\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 final class DatagridController extends Controller
 {
@@ -49,7 +50,7 @@ final class DatagridController extends Controller
             ['id' => 50, 'firstName' => 'Spider', 'lastName' => 'Big', 'regDate' => new \DateTime('2012-08-05 09:12:00 EST')],
         ]);
 
-        return $this->render('AppBundle::users.html.twig', ['datagrid' => $datagrid->createView()]);
+        return new Response($this->get('twig')->render('@App/users.html.twig', ['datagrid' => $datagrid->createView()]));
     }
 
     public function datagridByClassAction()
@@ -63,7 +64,7 @@ final class DatagridController extends Controller
             ['id' => 50, 'firstName' => 'Spider', 'lastName' => 'Big', 'regDate' => new \DateTime('2012-08-05 09:12:00 EST')],
         ]);
 
-        return $this->render('AppBundle::users.html.twig', ['datagrid' => $datagrid->createView()]);
+        return new Response($this->get('twig')->render('@App/users.html.twig', ['datagrid' => $datagrid->createView()]));
     }
 
     public function datagridByServiceAction()
@@ -75,6 +76,6 @@ final class DatagridController extends Controller
             ['id' => 0, 'firstName' => 'Doctor', 'lastName' => 'Who', 'regDate' => new \DateTime('1980-12-05 12:00:00 EST')],
         ]);
 
-        return $this->render('AppBundle::users.html.twig', ['datagrid' => $datagrid->createView()]);
+        return new Response($this->get('twig')->render('@App/users.html.twig', ['datagrid' => $datagrid->createView()]));
     }
 }
