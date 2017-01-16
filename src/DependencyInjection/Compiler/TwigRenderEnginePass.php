@@ -29,14 +29,20 @@ class TwigRenderEnginePass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        $definitionName = 'twig.loader.filesystem';
+
         if (!$container->hasDefinition('twig.loader.filesystem')) {
-            return;
+            if (!$container->hasDefinition('twig.loader.native_filesystem')) {
+                return;
+            }
+
+            $definitionName = 'twig.loader.native_filesystem';
         }
 
         $reflection = new \ReflectionClass(TwigDatagridExtension::class);
         $extensionFolder = dirname(dirname(dirname($reflection->getFileName())));
 
-        $container->getDefinition('twig.loader.filesystem')->addMethodCall(
+        $container->getDefinition($definitionName)->addMethodCall(
             'addPath',
             [$extensionFolder.'/Resources/theme']
         );
