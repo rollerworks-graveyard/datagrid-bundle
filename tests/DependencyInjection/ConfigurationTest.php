@@ -14,10 +14,14 @@ declare(strict_types=1);
 namespace Rollerworks\Bundle\DatagridBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyConfigTest\PhpUnit\AbstractConfigurationTestCase;
+use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
+use PHPUnit\Framework\TestCase;
 use Rollerworks\Bundle\DatagridBundle\DependencyInjection\Configuration;
 
-class ConfigurationTest extends AbstractConfigurationTestCase
+class ConfigurationTest extends TestCase
 {
+    use ConfigurationTestCaseTrait;
+
     public function testDefaultsAreValid()
     {
         $this->assertProcessedConfigurationEquals(

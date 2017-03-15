@@ -5,8 +5,8 @@ framework:
 
     secret:              test
     router:
-        resource: %kernel.root_dir%/config/routing.yml
-        strict_requirements: %kernel.debug%
+        resource: '%kernel.root_dir%/config/routing.yml'
+        strict_requirements: '%kernel.debug%'
     default_locale:      en
     trusted_proxies:     []
     session:
