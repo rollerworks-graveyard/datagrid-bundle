@@ -15,6 +15,7 @@ namespace Rollerworks\Bundle\DatagridBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Rollerworks\Bundle\DatagridBundle\DependencyInjection\DatagridExtension;
+use Rollerworks\Component\Datagrid\DatagridFactory;
 use Symfony\Component\DependencyInjection\Definition;
 
 final class DatagridExtensionTest extends AbstractExtensionTestCase
@@ -33,7 +34,7 @@ final class DatagridExtensionTest extends AbstractExtensionTestCase
         $this->load();
         $this->compile();
 
-        $this->container->get('rollerworks_datagrid.factory');
+        self::assertInstanceOf(DatagridFactory::class, $this->container->get('rollerworks_datagrid.factory'));
     }
 
     protected function getContainerExtensions()
